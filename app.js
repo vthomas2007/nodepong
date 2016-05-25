@@ -144,10 +144,12 @@ var Ball = function() {
     self.y += self.ySpeed;
 
     if (self.x < 0) {
-      self.x = 0;
+      self.x = GAME_WIDTH / 2;
+      GAME.player2.score++;
       self.toggleXDirection();
     } else if (self.x + self.width > 700) {
-      self.x = 700 - self.width;
+      self.x = GAME_WIDTH / 2;
+      GAME.player1.score++;
       self.toggleXDirection();
     }
 

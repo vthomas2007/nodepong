@@ -49,10 +49,15 @@ GAME.update = function() {
 };
 
 GAME.onDisconnect = function(socket) {
-  if (GAME.player1 && socket.id == GAME.player1.id)
+  console.log('Disconnecting');
+  if (GAME.player1 && socket.id == GAME.player1.id) {
     delete GAME.player1;
-  else if (GAME.player2 && socket.id == GAME.player2.id)
+    console.log('Player 1 Disconnected');
+  }
+  else if (GAME.player2 && socket.id == GAME.player2.id) {
     delete GAME.player2;
+    console.log('Player 2 Disconnected');
+  }
 };
 
 GAME.getUpdatePackage = function() {
@@ -91,11 +96,8 @@ var Player = function(id) {
       self.y = GAME_HEIGHT - self.height;
   };
 
-  Player.list[id] = self;
   return self;
 };
-
-Player.list = {};
 
 Player.onConnect = function(socket) {
   var player = Player(socket.id);
@@ -105,16 +107,15 @@ Player.onConnect = function(socket) {
   return player;
 };
 
-Player.onDisconnect = function(socket) {
-  delete Player.list[socket.id];
-};
-
 Player.update = function() {
   var pack = [];
-  for (var i in Player.list) {
-    var player = Player.list[i];
-    player.update();
-    pack.push(player.getUpdatepack());
+  if (GAME.player1 !== null && GAME.player1 !== undefined) {
+    GAME.player1.update();
+    pack.push(GAME.player1.getUpdatepack());
+  }
+  if (GAME.player2 !== null && GAME.player2 !== undefined) {
+    GAME.player2.update();
+    pack.push(GAME.player2.getUpdatepack());
   }
   return pack;
 };
@@ -169,16 +170,16 @@ io.sockets.on('connection', function(socket) {
   socket.id = Math.random();
   SOCKET_LIST[socket.id] = socket;
 
-  if (GAME.player1 === null) {
+  if (GAME.player1 === null || GAME.player1 === undefined) {
     var newPlayer = Player.onConnect(socket);
     newPlayer.x = 10;
     GAME.player1 = newPlayer;
     socket.emit('joinGameResponse', {success: true});
   }
-  else if (GAME.player2 === null) {
-    var newPlayer = Player.onConnect(socket);
-    newPlayer.x = 680;
-    GAME.player2 = newPlayer;
+  else if (GAME.player2 === null || GAME.player2 === undefined) {
+    var newPlayer2 = Player.onConnect(socket);
+    newPlayer2.x = 680;
+    GAME.player2 = newPlayer2;
     socket.emit('joinGameResponse', {success: true});
   }
   else {
@@ -188,7 +189,6 @@ io.sockets.on('connection', function(socket) {
   socket.on('disconnect', function() {
     delete SOCKET_LIST[socket.id];
     GAME.onDisconnect(socket);
-    Player.onDisconnect(socket);
   });
 });
 

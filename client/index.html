@@ -1,0 +1,57 @@
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="client/styles/main.css">
+  </head>
+  <body>
+    <div id="game-div">
+      <canvas id="game-canvas" width="700" height="400"></canvas>
+    </div>
+    <div id="score-container">
+      <div id="player-1-score-container">
+        Player 1:
+        <span id="player-1-score"></span>
+      </div>
+      <div id="player-2-score-container">
+        Player 2:
+        <span id="player-2-score"></span>
+      </div>
+    </div>
+
+    <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+    <script>
+      var socket = io();
+
+      var canvas = document.getElementById("game-canvas").getContext("2d");
+
+      var ball = {x: 0, y: 0, width: 10, height: 10}
+
+      socket.on('joinGameResponse', function(data) {
+        if (!data.success) {
+          alert("Game is full, feel free to watch!");
+        }
+      });
+
+      socket.on('update', function(data) {
+        if (data.ball)
+          ball.x = data.ball.x;
+        if (data.ball)
+          ball.y = data.ball.y;
+        canvas.clearRect(0, 0, 700, 400);
+        canvas.fillRect(ball.x, ball.y, ball.width, ball.height);
+
+        for (var i = 0; i < data.player.length; i++) {
+          canvas.fillRect(data.player[i].x, data.player[i].y, data.player[i].width, data.player[i].height);
+        }
+
+        if (data.game && data.game.player1Score != null && data.game.player2Score != null) {
+          document.getElementById("player-1-score").innerHTML = data.game.player1Score;
+          document.getElementById("player-2-score").innerHTML = data.game.player2Score;
+        }
+      });
+
+      document.onmousemove = function(event) {
+        socket.emit('mouseMove', {y: event.clientY - 120});
+      };
+    </script>
+  </body>
+</html>

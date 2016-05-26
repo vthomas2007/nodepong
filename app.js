@@ -14,7 +14,7 @@ app.get('/', function(req, res) {
 app.use('/client', express.static(__dirname + '/client'));
 app.use('/client/styles', express.static(__dirname + '/client/styles'));
 
-var port = process.env.PORT || 2001
+var port = process.env.PORT || 2001;
 server.listen(port);
 console.log('Server Started.');
 

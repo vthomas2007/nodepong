@@ -83,7 +83,7 @@ var Player = function(id) {
     id: id,
     x: 10,
     y: 180,
-    width: 10,
+    width: 20,
     height: 80,
     score: 0
   };
@@ -198,7 +198,7 @@ io.sockets.on('connection', function(socket) {
   }
   else if (GAME.player2 === null || GAME.player2 === undefined) {
     var newPlayer2 = Player.onConnect(socket);
-    newPlayer2.x = 680;
+    newPlayer2.x = 670;
     GAME.player2 = newPlayer2;
     socket.emit('joinGameResponse', {success: true});
   }

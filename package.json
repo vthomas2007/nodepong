@@ -3,8 +3,14 @@
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
-  "scripts": {
-  },
+  "scripts": {},
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.13.4",
+    "socket.io": "^1.4.6"
+  },
+  "engines": {
+    "node": "4.4.4"
+  }
 }

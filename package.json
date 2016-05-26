@@ -1,7 +1,7 @@
 {
   "name": "pong",
   "version": "1.0.0",
-  "description": "",
+  "description": "A simple pong game using socket.io",
   "main": "app.js",
   "scripts": {},
   "author": "",

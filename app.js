@@ -35,14 +35,22 @@ GAME.update = function() {
         GAME.ball.x + GAME.ball.width > GAME.player1.x &&
         GAME.ball.y < GAME.player1.y + GAME.player1.height &&
         GAME.ball.y + GAME.ball.height > GAME.player1.y) {
-          ball.toggleXDirection();
+          var minPossiblePointHit = GAME.player1.y - ball.height;
+          var maxPossiblePointHit = GAME.player1.y + GAME.player1.height;
+          var normalizedPointHit = (GAME.ball.y - minPossiblePointHit) / (maxPossiblePointHit - minPossiblePointHit);
+          GAME.ball.angle = -1 * (150 * normalizedPointHit - 75);
+          GAME.ball.speed += 1;
     }
 
     if (GAME.ball.x < GAME.player2.x + GAME.player2.width &&
-      GAME.ball.x + GAME.ball.width > GAME.player2.x &&
-      GAME.ball.y < GAME.player2.y + GAME.player2.height &&
-      GAME.ball.y + GAME.ball.height > GAME.player2.y) {
-        ball.toggleXDirection();
+        GAME.ball.x + GAME.ball.width > GAME.player2.x &&
+        GAME.ball.y < GAME.player2.y + GAME.player2.height &&
+        GAME.ball.y + GAME.ball.height > GAME.player2.y) {
+          var minPossiblePointHit = GAME.player2.y - ball.height;
+          var maxPossiblePointHit = GAME.player2.y + GAME.player2.height;
+          var normalizedPointHit = (GAME.ball.y - minPossiblePointHit) / (maxPossiblePointHit - minPossiblePointHit);
+          GAME.ball.angle = 180 - (-1 * (150 * normalizedPointHit - 75));
+          GAME.ball.speed += 1;
     }
 
     GAME.ball.update();
@@ -128,7 +136,8 @@ var Ball = function() {
     y: 300,
     width: 10,
     height: 10,
-    speed: 10,
+    initialSpeed: 15,
+    speed: 15,
     angle: 45
   };
 
@@ -140,26 +149,34 @@ var Ball = function() {
     self.angle *= -1;
   };
 
+  self.resetSpeed = function() {
+    self.speed = self.initialSpeed;
+  };
+
   self.update = function() {
     self.x += self.speed * Math.cos((self.angle*Math.PI)/180);
     self.y += self.speed * Math.sin((self.angle*Math.PI)/180) * -1
 
     if (self.x < 0) {
-      //self.x = GAME_WIDTH / 2;
+      self.x = GAME_WIDTH / 2;
       GAME.player2.score++;
-      self.toggleXDirection();
+      self.resetSpeed();
+      self.angle = 45;
     } else if (self.x + self.width > 700) {
-      //self.x = GAME_WIDTH / 2;
+      self.x = GAME_WIDTH / 2;
       GAME.player1.score++;
-      self.toggleXDirection();
+      self.resetSpeed();
+      self.angle = 135;
     }
 
     if (self.y < 0) {
       self.y = 0;
       self.toggleYDirection();
+      self.speed += 0.05;
     } else if (self.y + self.height > 400) {
       self.y = 400 - self.height;
       self.toggleYDirection();
+      self.speed += 0.05;
     }
   };
 

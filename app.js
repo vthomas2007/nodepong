@@ -155,18 +155,20 @@ var Ball = function() {
 
   self.update = function() {
     self.x += self.speed * Math.cos((self.angle*Math.PI)/180);
-    self.y += self.speed * Math.sin((self.angle*Math.PI)/180) * -1
+    self.y += self.speed * Math.sin((self.angle*Math.PI)/180) * -1;
 
-    if (self.x < 0) {
+    if (self.x < -40) {
       self.x = GAME_WIDTH / 2;
+      self.y = 200;
       GAME.player2.score++;
       self.resetSpeed();
-      self.angle = 45;
-    } else if (self.x + self.width > 700) {
+      self.angle = Math.random() * 40 - 20;
+    } else if (self.x + self.width > 700 + 40) {
       self.x = GAME_WIDTH / 2;
+      self.y = 200;
       GAME.player1.score++;
       self.resetSpeed();
-      self.angle = 135;
+      self.angle = Math.random() * 40 + 160;
     }
 
     if (self.y < 0) {

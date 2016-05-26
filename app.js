@@ -128,28 +128,28 @@ var Ball = function() {
     y: 300,
     width: 10,
     height: 10,
-    xSpeed: 10,
-    ySpeed: 10
+    speed: 10,
+    angle: 45
   };
 
   self.toggleXDirection = function() {
-    self.xSpeed *= -1
+    self.angle = 180 - self.angle;
   };
 
   self.toggleYDirection = function() {
-    self.ySpeed *= -1
+    self.angle *= -1;
   };
 
   self.update = function() {
-    self.x += self.xSpeed;
-    self.y += self.ySpeed;
+    self.x += self.speed * Math.cos((self.angle*Math.PI)/180);
+    self.y += self.speed * Math.sin((self.angle*Math.PI)/180) * -1
 
     if (self.x < 0) {
-      self.x = GAME_WIDTH / 2;
+      //self.x = GAME_WIDTH / 2;
       GAME.player2.score++;
       self.toggleXDirection();
     } else if (self.x + self.width > 700) {
-      self.x = GAME_WIDTH / 2;
+      //self.x = GAME_WIDTH / 2;
       GAME.player1.score++;
       self.toggleXDirection();
     }
